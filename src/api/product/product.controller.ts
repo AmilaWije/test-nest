@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ProductService } from './product.service';
-import type { Iproduct } from './product.service';
+import { ProductData } from './dto/product-response';
 
 @Controller('products')
 export class ProductController {
@@ -12,7 +12,7 @@ export class ProductController {
   }
 
   @Post('create')
-  createProduct(@Body() newProductData: Iproduct) {
+  createProduct(@Body() newProductData: ProductData) {
     return this.productService.createProduct(newProductData);
   }
 }

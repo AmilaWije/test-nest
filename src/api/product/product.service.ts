@@ -1,23 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/config/prisma/prisma.service';
-
-export interface Iproduct {
-    name: string,
-    price: number,
-    title: string
-}
+import { AllProductResponse, ProductData } from './dto/product-response';
 
 @Injectable()
 export class ProductService {
-    private products: Iproduct[] = [];
 
   constructor(private readonly DB: PrismaService) {}
 
-  async getAllProducts() {
-    return await this.DB.product.findMany();
+  async getAllProducts():Promise<AllProductResponse> {
+    const allProduct =  await this.DB.product.findMany();
+    return {
+        products: allProduct
+    }
   }
 
-  async createProduct(product: Iproduct) {
+  async createProduct(product: ProductData) {
     const createdProduct = await this.DB.product.create({
         data: product
     });

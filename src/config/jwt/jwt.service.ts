@@ -19,6 +19,7 @@ export class JwtAuthService {
 
     async verifyToken(token: string):Promise<boolean> {
         try {
+            // console.log(token);
             const verify = await this.jwt.verifyAsync(token);
             if(verify) {
                 return true;

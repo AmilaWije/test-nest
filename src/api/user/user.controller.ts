@@ -18,6 +18,12 @@ export class UserController {
     return this.userService.create(CreateUserDto);
   }
 
+  @Post('verifyToken')
+  @HttpCode(HttpStatus.OK)
+  verify(@Body("token") token) {
+    return this.userService.verifyToken(token);
+  }
+
   @Post('login')
   @HttpCode(HttpStatus.OK)
   login(@Body() loginUserData:LoginUserData) {

@@ -4,10 +4,12 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/config/prisma/prisma.service';
 import { threadCpuUsage } from 'node:process';
 import { LoginUserData } from './dto/user-request-dto';
+import { JwtAuthService } from 'src/config/jwt/jwt.service';
+import { promises } from 'node:dns';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly DB:PrismaService){}
+  constructor(private readonly DB:PrismaService, private readonly jwt:JwtAuthService){}
 
   async login(userLoginData:LoginUserData) {
     try {
@@ -18,12 +20,16 @@ export class UserService {
       })
       if(!user)throw new NotFoundException(`${userLoginData.username} not found.`);
       if(userLoginData.password !== user.password)throw new BadRequestException(`password not matched`);
-      return `${userLoginData.username} is succesfully Logged in.`;
+      return this.jwt.getToken();
     } catch (e) {
       console.log(e);
       if(e instanceof HttpException) throw e;
       throw new InternalServerErrorException('Internal server error exceptn');
     }
+  }
+
+  async verifyToken(token: string): Promise<boolean> {
+    return this.jwt.verifyToken(token);
   }
 
   async create(userData: CreateUserDto) {
